@@ -1,0 +1,118 @@
+---
+title: "互联网地图学 — ex 3"
+author: "Jianghao Wang"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect # architect cayman leonids tactile hpstr
+    highlight: github # vignette github
+    toc: true
+    toc_depth: 4
+    number_sections: true
+---
+
+# Mapping with leaflet + R
+
+## Markers
+利用经纬度坐标来标记地图上的点。可以输入的类型包括
+
+- `SpatialPoints` or `SpatialPointsDataFrame` objects (from the `sp` package)
+- `POINT`, `sfc_POINT`, and `sf` objects (from the `sf` package); only `X` and `Y` dimensions will be considered
+- Two-column numeric matrices (first column is longitude, second is latitude)
+- Data frame with latitude and logitude columns. You can explicitly tell the marker function which columns contain the coordinate data (e.g. `addMarkers(lng = ~Longitude, lat = ~Latitude)`), or let the function look for columns named `lat`/`latitude` and `lon`/`lng`/`long`/`longitude` (case insensitive).
+- Simply provide numeric vectors as `lng` and `lat` arguments
+
+一个简单的实例
+
+```{r warning=FALSE}
+library(leaflet)
+data(quakes)
+head(quakes)
+# Show first 20 rows from the `quakes` dataset
+leaflet(data = quakes[1:20,]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(mag), label = ~as.character(mag))
+```
+
+Marker Clusters
+
+```{r fig.height=4, message=FALSE}
+leaflet(quakes) %>% addTiles() %>% addMarkers(
+  clusterOptions = markerClusterOptions()
+)
+```
+
+
+## Points
+
+```{r fig.height=4}
+leaflet(quakes) %>% addTiles() %>% addCircleMarkers()
+```
+
+Or customize their color, radius, stroke, opacity, etc.
+
+```{r fig.height=4, message=FALSE, warning=FALSE}
+# Create a palette that maps factor levels to colors
+pal <- colorFactor(c("navy", "red"), domain = c("ship", "pirate"))
+quakes$type <-  factor(ifelse(runif(nrow(quakes)) > 0.75, "pirate", "ship"),c("ship", "pirate"))
+
+leaflet(quakes) %>% addTiles() %>%
+  addCircleMarkers(
+    radius = ~ifelse(type == "ship", 6, 10),
+    color = ~pal(type),
+    stroke = FALSE, fillOpacity = 0.5
+  )
+```
+
+```{r fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
+aqi <- read.csv("data/aqi.csv")
+pal <- colorQuantile("YlOrRd", NULL, n=5)
+leaflet(aqi) %>% addTiles()%>% 
+  addCircleMarkers(~lon, ~lat , popup=aqi$PM25,
+                   radius = log2(aqi$PM25),
+                   stroke = FALSE, fillOpacity = 0.8,
+                   color= ~pal(AQI)) 
+```
+
+## Lines
+
+```{r fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
+# install.packages("sf")
+library(sf)
+
+china <- read_sf("data/china.shp")
+
+plot(china)
+leaflet(data = china) %>%
+    addTiles() %>%
+    addPolylines()
+```
+    
+## Polygon
+
+```{r fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
+china$id <- as.numeric(china$id)
+china$id <- rnorm(n = nrow(china), mean = 100, sd = 5)
+leaflet(data = china) %>%
+    addTiles() %>%
+    addPolygons(fillColor = ~colorQuantile("YlOrRd", id)(id), 
+                color = "#444444", weight = 1, smoothFactor = 0.5,
+                opacity = 1.0, fillOpacity = 0.7,
+                highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                    bringToFront = TRUE))
+```
+
+## Raster
+
+```{r fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
+# install.packages("raster")
+library(raster)
+
+r <- raster("data/oisst-sst.nc")
+pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), values(r),
+  na.color = "transparent")
+
+leaflet() %>% addTiles() %>%
+  addRasterImage(r, colors = pal, opacity = 0.8) %>%
+  addLegend(pal = pal, values = values(r),
+    title = "Surface temp")
+```

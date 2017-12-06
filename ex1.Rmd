@@ -1,0 +1,116 @@
+---
+title: "互联网地图学 — ex 1"
+author: "Jianghao Wang"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect # architect cayman leonids tactile hpstr
+    highlight: github # vignette github
+    toc: true
+    toc_depth: 4
+    number_sections: true
+---
+
+# 引言
+本实习是[国科大](http://www.ucas.ac.cn/)现代地图学课程中的**互联网地图学**的配套上机实践。
+
+练习包括两个部分：
+
+1. 如何利用R语言，结合leaflet，实现空间数据的空间制图表达；
+
+  - ex 1: 简介与准备
+  - ex 2: R + leaflet 互联网制图
+  - ex 3: Mapping with leaflet + R
+  
+2. 如何利用Mapbox Studio, 进行互联网制图
+
+# 实践1: `R + leaflet`互联网制图
+## R语言简介
+
+关于R语言，可以参考Wikipedia上的介绍：[链接](https://zh.wikipedia.org/wiki/R%E8%AF%AD%E8%A8%80)
+
+> R语言，一种自由软件编程语言与操作环境，主要用于统计分析、绘图、数据挖掘。R本来是由来自新西兰奥克兰大学的罗斯·伊哈卡和罗伯特·杰特曼开发（也因此称为R），现在由“R开发核心团队”负责开发。R基于S语言的一个GNU计划项目，所以也可以当作S语言的一种实现，通常用S语言编写的代码都可以不作修改的在R环境下运行。R的语法是来自Scheme。
+
+- R 语言主页：https://www.r-project.org/
+- 入门介绍：https://cran.r-project.org/manuals.html
+- 系统参考书：[《R语言实战（第2版）》](https://book.douban.com/subject/26785199/)
+
+## R 入门
+
+### **R安装**
+<img src="figs/Rlogo.png" width="100">
+
+R是一个跨平台的语言，可以允许在Windows, MacOS, Linux等操作系统上。
+
+最新版本下载地址：https://cran.r-project.org/mirrors.html ，可以选择China等镜像进行下载。如选择中科大或清华大学镜像：https://mirrors.ustc.edu.cn/CRAN/
+
+安装软件放置在software文件夹中，可以根据自己的操作系统安装最新版本的R：
+
+- R-3.4.2-mac.pkg: Mac OS版本
+- R-3.4.3-win.exe: Windows版本
+
+根据默认的设置即可完成R的安装。
+
+### **RStudio安装**
+
+<img src="figs/RStudio-Logo-Blue-Gray-250.png" width="200">
+
+R还包括一个功能强大的GUI界面的软件，RStudio: https://www.rstudio.com/
+
+下载地址：https://www.rstudio.com/products/rstudio/download/
+
+安装软件放置在software文件夹中，可以根据自己的操作系统安装最新版本的RStudio：
+
+- RStudio-1.1.383.dmg: Mac OS版本
+- RStudio-1.1.383.exe: Windows版本
+
+### **R Package安装**
+在联网情况下，可以直接在R的命令行中通过`install.packages()`完成Package安装，如需要按照`leaflet`包，可以通过以下命令
+
+```{r eval=FALSE, message=FALSE, warning=FALSE}
+install.packages(pkg = "leaflet", dependencies = TRUE)
+```
+
+如果是在R-GUI中，第一次需要选择需要按照的*镜像服务器*（如中国的镜像）进行函数包的按照。
+
+## leaflet简介
+<img src="figs/leaflet-logo.jpg" width="250">
+
+项目主页：http://leafletjs.com/
+
+> Leaflet是一个为建设交互性好适用于移动设备地图的领先开源JavaScript库。代码大小仅仅33KB，它具有开发在线地图的大部分功能。Leaflet设计坚持简便、高性能和可用性好的思想，能够在所有主流的桌面和移动平台高效的运作。支持插件扩展，拥有漂亮、易用的API文档和一个简单的、可读的源代码。
+
+## Leaflet for R
+
+项目主页：http://rstudio.github.io/leaflet/
+
+[Leaflet](http://leafletjs.com) is one of the most popular open-source JavaScript libraries for interactive maps. It's used by websites ranging from [The New York Times](http://www.nytimes.com/projects/elections/2013/nyc-primary/mayor/map.html) and [The Washington Post](http://www.washingtonpost.com/sf/local/2013/11/09/washington-a-world-apart/) to [GitHub](https://github.com/blog/1528-there-s-a-map-for-that) and [Flickr](https://www.flickr.com/map), as well as GIS specialists like [OpenStreetMap](http://www.openstreetmap.org/), [Mapbox](http://www.mapbox.com/), and [CartoDB](http://cartodb.com/).
+
+利用R中的`leaflet`函数包可以非常方便的调用其制图功能进行地图制图。
+
+其基本特点包括：
+
+* Interactive panning/zooming
+* Compose maps using arbitrary combinations of:
+    * Map tiles
+    * Markers
+    * Polygons
+    * Lines
+    * Popups
+    * GeoJSON
+* Create maps right from the R console or RStudio
+* Embed maps in [knitr](http://yihui.name/knitr/)/[R Markdown](http://rmarkdown.rstudio.com/) documents and [Shiny](http://shiny.rstudio.com/) apps
+* Easily render spatial objects from the `sp` or `sf` packages, or data frames with latitude/longitude columns
+* Use map bounds and mouse events to drive Shiny logic
+* Display maps in non spherical mercator projections
+* Augment map features using chosen plugins from [leaflet plugins repository](http://leafletjs.com/plugins)
+
+### 安装
+在R中运行以下代码即可：
+
+```{r eval=FALSE}
+install.packages(pkg = "leaflet", dependencies = TRUE)
+# to install the development version from Github, run
+# devtools::install_github("rstudio/leaflet")
+install.packages(pkg = c("raster", "sf"), dependencies = TRUE)
+```

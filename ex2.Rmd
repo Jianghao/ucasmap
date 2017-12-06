@@ -1,0 +1,131 @@
+---
+title: "互联网地图学 — ex 2"
+author: "Jianghao Wang"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect # architect cayman leonids tactile hpstr
+    highlight: github # vignette github
+    toc: true
+    toc_depth: 4
+    number_sections: true
+---
+
+# R + leaflet 互联网制图
+
+## 基本用法 
+1. 通过 `leaflet()` 初始化一个地图.
+2. 利用以下函数 (e.g. `addTiles`, `addMarkers`, `addPolygons`) 来添加图层.
+3. 重复第二步完成你想要的设置.
+4. 输出地图.
+
+一个简单的例子：
+
+```{r warning=FALSE}
+library(leaflet)
+# library(magrittr)
+
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=116.67498, lat=40.40652, popup="The University of Chinese Academy of Sciences")
+m  # Print the map
+```
+
+如果你对R中的管道操作（`%>%`）不熟悉，可以采用以下方式：
+
+```{r eval=FALSE}
+m <- leaflet()
+m <- addTiles(m)
+m <- addMarkers(lng=116.67498, lat=40.40652, popup="The University of Chinese Academy of Sciences")
+m
+```
+leaflet中可以接受的输出数据包括以下几种：
+
+- From base R:
+
+- From the [**maps** package](http://cran.rstudio.com/package=maps):
+    - the data frame from returned from `map()`
+
+## 数据输入
+
+**第一种：输入数据为经纬度坐标**
+
+- lng/lat matrix
+- data frame with lng/lat columns
+
+```{r warning=FALSE}
+m = leaflet() %>% addTiles()
+df = data.frame(
+  lat = rnorm(100),
+  lng = rnorm(100),
+  size = runif(100, 5, 20),
+  color = sample(colors(), 100)
+)
+m = leaflet(df) %>% addTiles()
+m %>% addCircleMarkers(radius = ~size, color = ~color, fill = FALSE)
+m %>% addCircleMarkers(radius = runif(100, 4, 10), color = c('red'))
+```
+
+**第二种：空间数据格式**
+
+[**sp** package](http://cran.rstudio.com/package=sp):
+
+- `SpatialPoints[DataFrame]`
+- `Line`/`Lines`
+- `SpatialLines[DataFrame]`
+- `Polygon`/`Polygons`
+- `SpatialPolygons[DataFrame]`
+
+**第三种：`maps`包中的数据**
+
+[**maps** package](http://cran.rstudio.com/package=maps):
+
+- the data frame from returned from `map()`
+
+```{r warning=FALSE}
+# install.packages("maps")
+library(maps)
+mapStates = map("state", fill = TRUE, plot = FALSE)
+leaflet(data = mapStates) %>% addTiles() %>%
+  addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
+```
+
+## 地图选择
+
+### 第三方地图
+leaflet支持多种类型的底图，包括Google Map，Openstreetmap等，默认为OSM的底图。也可以添加第三方的底图。
+
+改变底图的函数：`addProviderTiles()`, 也可以通过改变[leaflet-providers plugin](https://github.com/leaflet-extras/leaflet-providers)来改变，更全面的例子见[这里](http://leaflet-extras.github.io/leaflet-providers/preview/index.html)。
+
+```{r fig.height=4}
+m <- leaflet() %>% setView(lng=116.67498, lat=40.40652, zoom = 12)
+m %>% addTiles()
+m %>% addProviderTiles(providers$Stamen.Toner)
+m %>% addProviderTiles(providers$CartoDB.Positron)
+m %>% addProviderTiles(providers$Esri.NatGeoWorldMap)
+```
+
+### WMS Tiles
+可以利用`addWMSTiles()`来添加WMS (Web Map Service) tiles。
+
+The map below shows the Base Reflectivity (a measure of the intensity of precipitation occurring) using the WMS from the [Iowa Environmental Mesonet ](http://mesonet.agron.iastate.edu):
+
+```{r fig.height=4}
+leaflet() %>% addTiles() %>% setView(-93.65, 42.0285, zoom = 4) %>%
+  addWMSTiles(
+    "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
+    layers = "nexrad-n0r-900913",
+    options = WMSTileOptions(format = "image/png", transparent = TRUE),
+    attribution = "Weather data © 2012 IEM Nexrad"
+  )
+```
+
+### 多种底图叠加
+还可以通过设置透明色的方式，将多种底图进行叠加显示
+
+```{r fig.height=4}
+m %>% addProviderTiles(providers$MtbMap) %>%
+  addProviderTiles(providers$Stamen.TonerLines,
+    options = providerTileOptions(opacity = 0.35)) %>%
+  addProviderTiles(providers$Stamen.TonerLabels)
+```

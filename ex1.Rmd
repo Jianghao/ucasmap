@@ -105,7 +105,7 @@ install.packages(pkg = "leaflet", dependencies = TRUE)
 * Display maps in non spherical mercator projections
 * Augment map features using chosen plugins from [leaflet plugins repository](http://leafletjs.com/plugins)
 
-### 安装
+### 包安装
 在R中运行以下代码即可：
 
 ```{r eval=FALSE}

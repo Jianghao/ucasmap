@@ -63,7 +63,7 @@ df = data.frame(
 )
 m = leaflet(df) %>% addTiles()
 m %>% addCircleMarkers(radius = ~size, color = ~color, fill = FALSE)
-m %>% addCircleMarkers(radius = runif(100, 4, 10), color = c('red'))
+m %>% addCircleMarkers(m, radius = runif(100, 4, 10), color = c('red'))
 ```
 
 **第二种：空间数据格式**

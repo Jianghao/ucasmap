@@ -10,4 +10,4 @@
   
 2. 如何利用Mapbox Studio, 进行互联网制图
 
-  - ex 4: [Mapping with Mapbox Studio](http://jianghao.wang/ucasmap/ex4)
+  - ex 4: [Mapping with Mapbox Studio](http://jianghao.wang/ucasmap/ex4)  【已更新，可提前查看】

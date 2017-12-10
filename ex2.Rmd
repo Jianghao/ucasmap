@@ -36,7 +36,7 @@ m  # Print the map
 ```{r eval=FALSE}
 m <- leaflet()
 m <- addTiles(m)
-m <- addMarkers(lng=116.67498, lat=40.40652, popup="The University of Chinese Academy of Sciences")
+m <- addMarkers(m, lng=116.67498, lat=40.40652, popup="The University of Chinese Academy of Sciences")
 m
 ```
 leaflet中可以接受的输出数据包括以下几种：
@@ -54,16 +54,16 @@ leaflet中可以接受的输出数据包括以下几种：
 - data frame with lng/lat columns
 
 ```{r warning=FALSE}
-m = leaflet() %>% addTiles()
-df = data.frame(
+m <- leaflet() %>% addTiles()
+df <- data.frame(
   lat = rnorm(100),
   lng = rnorm(100),
   size = runif(100, 5, 20),
   color = sample(colors(), 100)
 )
-m = leaflet(df) %>% addTiles()
+m <- leaflet(df) %>% addTiles()
 m %>% addCircleMarkers(radius = ~size, color = ~color, fill = FALSE)
-m %>% addCircleMarkers(m, radius = runif(100, 4, 10), color = c('red'))
+m %>% addCircleMarkers(radius = runif(100, 4, 10), color = c('red'))
 ```
 
 **第二种：空间数据格式**

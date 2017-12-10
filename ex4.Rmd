@@ -52,6 +52,7 @@ output:
 你可以对自己账号中的Dataset数据，通过”Export“的方式导出为Tileset，生成与Dataset对应的Tileset切片数据。此外你也可以直接在Tilesets页面创建一个新的tileset，并上传包括[MBTiles](https://www.mapbox.com/help/define-mbtiles/)、KML、GeoJSON、Shapefile(zipped)、CSV、以及GeoTIFF等格式的数据(详细的数据格式要求，请见[这里](https://www.mapbox.com/help/uploads/))。通过Tileset上传的数据，Mapbox Studio将直接转换为切片数据，因此不能再进行编辑（这也是Tilesets与Dataset的区别）。
 
 ![](figs/05-upload-tiles.png)
+
 ## 创建Style
 
 打开Styles页面，点击“New style”来创建一个新的地图style，你可以选择不同风格样式来创建地图sytle，Mapbox Studio已经为您预设了好几种地图样式：Basic，Bright，Streets，Outdoors，Dark，Light，Satellite，Traffic Day等。

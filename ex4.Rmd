@@ -1,0 +1,15 @@
+---
+title: "互联网地图学 — ex 4"
+author: "Jianghao Wang"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect # architect cayman leonids tactile hpstr
+    highlight: github # vignette github
+    toc: true
+    toc_depth: 4
+    number_sections: true
+---
+
+# 引言
+本练习将介绍如何利用[Mapbox Studio](https://www.mapbox.com/mapbox-studio/)进行互联网制图。

@@ -89,6 +89,7 @@ output:
 ## 更多帮助
 - Mapbox Studio Manual: https://www.mapbox.com/help/studio-manual/
 - Tutorials and examples：https://www.mapbox.com/help/studio-manual-tutorials/
+- Mapbox Studio Intro: https://github.com/Jianghao/ucasmap/tree/gh-pages/ex4-Mapbox-Studio-Intro.pdf
 
 ## 更多实例
 - http://jianghao.wang/bus/

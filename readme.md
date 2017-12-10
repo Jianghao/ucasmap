@@ -1,4 +1,4 @@
-本实习是[国科大](http://www.ucas.ac.cn/)现代地图学课程中的**互联网地图学**的配套上机实践。
+本实习是[国科大](http://www.ucas.ac.cn/) 2017年《现代地图学》课程中的**互联网地图学**的配套上机实践。
 
 练习包括两个部分：
 
@@ -10,4 +10,4 @@
   
 2. 如何利用Mapbox Studio, 进行互联网制图
 
-  - to be complete
+  - ex 4: [Mapping with Mapbox Studio](http://jianghao.wang/ucasmap/ex4)

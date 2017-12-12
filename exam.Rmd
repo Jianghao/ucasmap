@@ -1,0 +1,23 @@
+---
+title: "空气污染制图"
+author: "Jianghao Wang"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect # architect cayman leonids tactile hpstr
+    highlight: github # vignette github
+    toc: true
+    toc_depth: 4
+    number_sections: true
+---
+
+# 引言
+介绍自己的可视化项目
+
+<iframe width='100%' height='700px' frameBorder='0' src='https://api.tiles.mapbox.com/v3/hellowangjh.China_bus/page.html#5/37.423/108.611'></iframe>
+
+```{r}
+library(leaflet)
+
+
+```
